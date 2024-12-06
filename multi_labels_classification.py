@@ -1,5 +1,6 @@
 import torch
 from torch import nn
+from pathlib import Path
 import matplotlib.pyplot as plt
 from sklearn.datasets import make_blobs
 from sklearn.model_selection import train_test_split
@@ -21,7 +22,7 @@ print(X_blob[:5]), print(y_blob[:5])
 X_blob_train, X_blob_test, y_blob_train, y_blob_test = train_test_split(X_blob, y_blob, test_size=0.2, random_state=RANDOM_SEED)
 plt.figure(figsize=(10, 7))
 plt.scatter(X_blob[:, 0], X_blob[:, 1], c=y_blob, cmap=plt.cm.RdYlBu)
-# plt.show()
+plt.show()
 
 ##############################
 # Model Preparation
@@ -69,7 +70,7 @@ X_blob_test, y_blob_test = X_blob_test.to(device), y_blob_test.to(device)
 for epoch in range(epochs):
     model_4.train()
 
-    y_logits = model_4(X_blob_train) 
+    y_logits = model_4(X_blob_train)
     y_pred = torch.softmax(y_logits, dim=1).argmax(dim=1)
     loss = loss_fn(y_logits, y_blob_train) 
     acc = accuracy_fn(y_true=y_blob_train,
@@ -111,3 +112,15 @@ plt.subplot(1, 2, 2)
 plt.title("Test")
 plot_decision_boundary(model_4, X_blob_test, y_blob_test)
 plt.show()
+
+##############################
+# Download model
+##############################
+MODEL_PATH = Path("models")
+MODEL_PATH.mkdir(parents=True, exist_ok=True)
+
+MODEL_NAME = "multi_labels_classification.pth"
+MODEL_SAVE_PATH = MODEL_PATH / MODEL_NAME
+
+print(f"Saving model to: {MODEL_SAVE_PATH}")
+torch.save(obj=model_4.state_dict(), f=MODEL_SAVE_PATH)

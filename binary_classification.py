@@ -18,8 +18,8 @@ X, y = make_circles(n_samples, noise=0.03, random_state=42)
 
 circles = pd.DataFrame({"X1": X[:, 0], "X2": X[:, 1], "label": y})
 
-# plt.scatter(x=X[:, 0], y=X[:, 1], c=y, cmap=plt.cm.RdYlBu)
-# plt.show()
+plt.scatter(x=X[:, 0], y=X[:, 1], c=y, cmap=plt.cm.RdYlBu)
+plt.show()
 
 print(X.shape), print(y.shape)
 
@@ -131,3 +131,15 @@ plt.subplot(1, 2, 2)
 plt.title("Test")
 plot_decision_boundary(model_0, X_test, y_test)
 plt.show()
+
+##############################
+# Download model
+##############################
+MODEL_PATH = Path("models")
+MODEL_PATH.mkdir(parents=True, exist_ok=True)
+
+MODEL_NAME = "binary_classification.pth"
+MODEL_SAVE_PATH = MODEL_PATH / MODEL_NAME
+
+print(f"Saving model to: {MODEL_SAVE_PATH}")
+torch.save(obj=model_0.state_dict(), f=MODEL_SAVE_PATH)
